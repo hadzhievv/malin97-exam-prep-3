@@ -38,8 +38,19 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Start the application
-      run: npm run start
+      run: npm run start &
     - name: Install the Playwright framework
       run: npx playwright install
     - name: Run ui tests
       run: npm run test:ui
+
+  deploy:
+    needs: run_ui_tests
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v3
+        - uses: JorgeLNJunior/render-deploy@v1.4.4
+          with:
+            service_id: ${{ secrets.RENDER_SERVICE_ID }}
+            api_key: ${{ secrets.RENDER_API_KEY }}
+            wait_deploy: true 
